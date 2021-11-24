@@ -2,15 +2,20 @@ package net.svichch.geekbrains.android.endlesslist.ui.list
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.schedulers.Schedulers
 import net.svichch.geekbrains.android.endlesslist.R
 import net.svichch.geekbrains.android.endlesslist.databinding.FragmentListBinding
-import net.svichch.geekbrains.android.endlesslist.placeholder.PlaceholderContent
+import net.svichch.geekbrains.android.endlesslist.network.api.ApiHolder
+import net.svichch.geekbrains.android.endlesslist.network.api.hot.Child
+import net.svichch.geekbrains.android.endlesslist.network.api.retrofit.RetrofitHot
 
 class FragmentList : Fragment() {
 
@@ -28,10 +33,25 @@ class FragmentList : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val adapter = ListAdapter(PlaceholderContent.ITEMS)
-        binding.list.adapter = adapter
         addLine()
+        getHot()
+    }
 
+    private fun getHot() {
+        RetrofitHot(ApiHolder().api).getHot()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ hot ->
+
+                hot.data?.children?.let { addAdapter(it) }
+            }, {
+                Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
+            })
+    }
+
+    private fun addAdapter(results: List<Child>) {
+        val adapter = ListAdapter(results)
+        binding.list.adapter = adapter
     }
 
     // Добавляем полоску

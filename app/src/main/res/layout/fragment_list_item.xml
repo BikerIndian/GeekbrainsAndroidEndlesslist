@@ -44,21 +44,20 @@
         android:id="@+id/image_comment"
         android:layout_width="40dp"
         android:layout_height="31dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="10dp"
+        android:layout_marginEnd="50dp"
+        android:layout_marginBottom="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/item_number"
-        app:layout_constraintTop_toBottomOf="@+id/content"
+        app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/ic_comment" />
 
     <TextView
-        android:id="@+id/item_number"
+        android:id="@+id/comment_size"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="50dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginBottom="15dp"
         android:text="30"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintStart_toEndOf="@+id/image_comment" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
