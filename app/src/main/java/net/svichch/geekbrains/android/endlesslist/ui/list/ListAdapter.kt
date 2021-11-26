@@ -23,6 +23,7 @@ class ListAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        println(">>>>>>>>>>>>>> ${values.size} ")
         val item = values[position]
         holder.commentSize.text = (item.data?.numComments ?: "0").toString()
         holder.content.text = item.data?.title ?: "No info"
