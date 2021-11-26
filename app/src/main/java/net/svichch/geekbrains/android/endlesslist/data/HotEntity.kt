@@ -6,8 +6,8 @@ import androidx.room.PrimaryKey
 
 @Entity
 class HotEntity(
-    @field:PrimaryKey
 
+    @PrimaryKey(autoGenerate = true) val id: Int,
     @field:ColumnInfo(name = "content")
     var content: String,
     @field:ColumnInfo(name = "star_num")

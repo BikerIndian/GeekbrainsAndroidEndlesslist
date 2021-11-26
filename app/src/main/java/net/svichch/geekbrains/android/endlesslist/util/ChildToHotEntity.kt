@@ -14,7 +14,7 @@ class ChildToHotEntity {
                 val content: String = it.data?.title ?: "No info"
                 val starNum: String = (it.data?.numCrossposts ?: "0").toString()
                 val comment_size: String = (it.data?.numComments ?: "0").toString()
-                val hot = HotEntity(content, starNum, comment_size)
+                val hot = HotEntity(0,content, starNum, comment_size)
                 hotEntity.add(hot)
             }
 

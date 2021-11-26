@@ -7,18 +7,22 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
 import net.svichch.geekbrains.android.endlesslist.data.HotDao
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.collectLatest
 import net.svichch.geekbrains.android.endlesslist.R
 import net.svichch.geekbrains.android.endlesslist.data.AppDataBase
 import net.svichch.geekbrains.android.endlesslist.databinding.FragmentListBinding
 import net.svichch.geekbrains.android.endlesslist.network.api.ApiHolder
 import net.svichch.geekbrains.android.endlesslist.network.api.hot.Child
 import net.svichch.geekbrains.android.endlesslist.network.api.retrofit.RetrofitHot
+import net.svichch.geekbrains.android.endlesslist.ui.list.paging.PagingAdapter
+import net.svichch.geekbrains.android.endlesslist.ui.list.paging.PagingViewModel
 import net.svichch.geekbrains.android.endlesslist.util.ChildToHotEntity
 
 class FragmentList : Fragment() {
@@ -51,12 +55,9 @@ class FragmentList : Fragment() {
     }
 
     private fun getData() {
-        var childList: List<Child>
         GlobalScope.launch(Dispatchers.Main) {
-            childList = ChildToHotEntity.getChild(db.all())
-            renderData(childList)
+            renderData()
         }
-
     }
 
     private fun getHot() {
@@ -73,12 +74,15 @@ class FragmentList : Fragment() {
             })
     }
 
-    private fun renderData(childList: List<Child>) {
+    private fun renderData() {
 
-        val adapter = ListAdapter(childList)
+        val adapter = PagingAdapter()
         binding.list.adapter = adapter
-    }
 
+        lifecycleScope.launch {
+            PagingViewModel(db).allCheeses.collectLatest {adapter.submitData(it) }
+        }
+    }
 
     // Добавляем полоску
     @SuppressLint("UseCompatLoadingForDrawables")
